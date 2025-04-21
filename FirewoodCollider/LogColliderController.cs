@@ -1,15 +1,24 @@
-﻿using UnityEngine;
+﻿using MSCLoader;
+using UnityEngine;
 
 namespace FirewoodCollider
 {
     public class LogColliderController : MonoBehaviour
     {
         public Collider[] PushColliders;
+        public SettingsSliderInt BreakForceSlider;
+
         internal Collider logCollider;
         internal Collider logCloneColider;
 
         private void Start()
         {
+            // Set value to avoid crashes
+            if (PushColliders == null)
+            {
+                PushColliders = new Collider[0];
+            }
+
             // The prefab is made of 2 parts and has 2 colliders.
             logCollider = gameObject.transform.parent.GetComponent<Collider>();
             logCloneColider = gameObject.transform.GetComponent<Collider>();
@@ -18,7 +27,7 @@ namespace FirewoodCollider
 
             // Log prefab was set to be indestructable. We ignored the collider 
             // and the log wont break by itself so reset value to default.
-            gameObject.GetComponent<FixedJoint>().breakForce = 20000f;
+            gameObject.GetComponent<FixedJoint>().breakForce = BreakForceSlider == null ? 10000f : BreakForceSlider.GetValue();
         }
 
         private void OnJointBreak()
